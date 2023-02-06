@@ -4,7 +4,7 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
-interface Anim {
+interface ProductsModel {
   nome?: string;
   categoria?: string | undefined;
   image?: string;
@@ -16,16 +16,12 @@ interface Anim {
   id?: string;
 }
 
-interface AnimGroup {
-  group: Anim[];
-}
-
 class MockApiRoutes {
   router = Router();
 
   constructor() {
     this.products();
-    this.departamento();
+    this.departament();
     this.carousel();
     this.frontProducts();
     this.fromUniqueDepartment();
@@ -49,19 +45,19 @@ class MockApiRoutes {
     let { data: european } = await axios.get(process.env.BRAZILIAN_API);
 
     const fetchProdutos = await Promise.all([brazilian, european]);
-    const allProducts: Anim[] = [];
+    const allProducts: ProductsModel[] = [];
 
-    fetchProdutos[0].forEach((values: Anim) => {
+    fetchProdutos[0].forEach((values: ProductsModel) => {
       allProducts.push(values);
     });
-    fetchProdutos[1].forEach((values: Anim) => {
+    fetchProdutos[1].forEach((values: ProductsModel) => {
       allProducts.push(values);
     });
 
     return allProducts;
   }
 
-  departamento() {
+  departament() {
     this.router.get("/departaments", async (req: Request, res: Response) => {
       const alldepartaments: String[] = [];
 
@@ -83,11 +79,11 @@ class MockApiRoutes {
     this.router.get("/slides", async (req: Request, res: Response) => {
       const data = await this.allProducts();
 
-      // const allProducts: Anim[] = [];
+      // const allProducts: ProductsModel[] = [];
       const fiveSlides = [];
 
-      data.forEach((valueOf: Anim) => {
-        const slides: Anim = {
+      data.forEach((valueOf: ProductsModel) => {
+        const slides: ProductsModel = {
           nome: valueOf.nome,
           preco: valueOf.preco,
           image:
@@ -120,6 +116,7 @@ class MockApiRoutes {
       for (let index = 0; index < 8; index++) {
         const n = Math.floor(Math.random() * data.length - 1);
         const products = {
+          id: data[n].id,
           nome: data[n].nome,
           preco: data[n].preco,
           categoria: data[n].categoria,
@@ -128,7 +125,7 @@ class MockApiRoutes {
           departamento: data[n].departamento,
           image:
             "https://static.vecteezy.com/ti/vetor-gratis/p3/226407-tshirt-vector-camisa-preta-gratis-vetor.jpg",
-        } as Anim;
+        } as ProductsModel;
         fiveProducts.push(products);
       }
 
@@ -144,7 +141,7 @@ class MockApiRoutes {
 
         const departamentChoosed = req.query.queryDepartment;
 
-        const productsOfTheDepartment: Anim[] = [];
+        const productsOfTheDepartment: ProductsModel[] = [];
 
         data.forEach((data) => {
           if (data.departamento == departamentChoosed)
@@ -162,7 +159,7 @@ class MockApiRoutes {
 
       const searchTerm = req.query.searchTerm;
 
-      const foundProducts: Anim[] = [];
+      const foundProducts: ProductsModel[] = [];
 
       data.forEach((data) => {
         if (typeof searchTerm == "string") {
@@ -180,7 +177,7 @@ class MockApiRoutes {
 
       const productId = req.query.productId;
 
-      const foundProduct: Anim[] = [];
+      const foundProduct: ProductsModel[] = [];
 
       data.forEach((data) => {
         if (data.id == productId) foundProduct.push(data);
