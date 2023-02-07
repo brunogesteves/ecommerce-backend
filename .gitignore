@@ -7,3 +7,5 @@ db
 prisma/migrations
 coverage
 public/img
+
+.env

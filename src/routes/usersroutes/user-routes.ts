@@ -1,6 +1,7 @@
 import { Request, Response, Router } from "express";
 import axios from "axios";
 import dotenv from "dotenv";
+import { getInfoUser } from "../../repositories";
 
 dotenv.config();
 
@@ -22,6 +23,8 @@ class UserRoutes {
   constructor() {
     this.products();
     this.findProducts();
+    this.sendProducts();
+    this.getUserInformation();
   }
 
   products() {
@@ -54,7 +57,6 @@ class UserRoutes {
 
   findProducts() {
     this.router.get("/findproducts", async (req: Request, res: Response) => {
-      console.log("aoi");
       const foundProducts: ProductsModel[] = [];
       const data = await this.allProducts();
 
@@ -71,6 +73,27 @@ class UserRoutes {
       // console.log(foundProducts);
       return res.json(foundProducts);
     });
+  }
+
+  sendProducts() {
+    this.router.post("/sendproducts", async (req: Request, res: Response) => {
+      console.log("api-sendproducts");
+
+      console.log(req.query);
+    });
+  }
+
+  getUserInformation() {
+    this.router.get(
+      "/getUserInformation",
+      async (req: Request, res: Response) => {
+        const idNumber = Number(req.query.idNumber);
+
+        const allInfoUser = await getInfoUser(idNumber);
+
+        res.send(allInfoUser);
+      }
+    );
   }
 }
 
