@@ -1,7 +1,12 @@
 import { Request, Response, Router } from "express";
 import axios from "axios";
 import dotenv from "dotenv";
-import { getInfoUser } from "../../repositories";
+import {
+  getInfoUser,
+  getLoginInfo,
+  newInfoUserUpdate,
+  getShopping,
+} from "../../repositories";
 
 dotenv.config();
 
@@ -25,6 +30,9 @@ class UserRoutes {
     this.findProducts();
     this.sendProducts();
     this.getUserInformation();
+    this.userLogin();
+    this.updateUser();
+    this.getshopping();
   }
 
   products() {
@@ -61,25 +69,21 @@ class UserRoutes {
       const data = await this.allProducts();
 
       const idItems: any = req.query.idItems;
-      console.log(idItems);
+      console.log("findproducts: ", idItems);
 
       for (let i = 0; i < idItems.length; i++) {
         if (idItems[i] !== data[i].id) {
           foundProducts.push(data[idItems[i] - 1]);
-          // return false;
         }
       }
 
-      // console.log(foundProducts);
       return res.json(foundProducts);
     });
   }
 
   sendProducts() {
     this.router.post("/sendproducts", async (req: Request, res: Response) => {
-      console.log("api-sendproducts");
-
-      console.log(req.query);
+      console.log("api-sendproducts: ", req.query);
     });
   }
 
@@ -94,6 +98,42 @@ class UserRoutes {
         res.send(allInfoUser);
       }
     );
+  }
+
+  getshopping() {
+    this.router.get("/getshopping", async (req: Request, res: Response) => {
+      const idNumber = Number(req.query.id);
+      console.log("getshopping: ", idNumber);
+
+      const shoppingUser = await getShopping(idNumber);
+      console.log("getshoppingret: ", shoppingUser?.shopping);
+
+      res.send(shoppingUser?.shopping);
+    });
+  }
+
+  userLogin() {
+    this.router.get("/userlogin", async (req: Request, res: Response) => {
+      const loginInfo = req.query as any;
+
+      const infoUserLogin = await getLoginInfo(loginInfo);
+      if (infoUserLogin) {
+        res.json({ status: true, content: infoUserLogin });
+      }
+    });
+  }
+
+  updateUser() {
+    this.router.post("/updateuser", async (req: Request, res: Response) => {
+      const newInfoUser = req.query as any;
+      console.log("updateuser :", newInfoUser);
+
+      const infoUser = await newInfoUserUpdate(newInfoUser);
+
+      if (infoUser) {
+        res.json({ status: true });
+      }
+    });
   }
 }
 
