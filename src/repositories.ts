@@ -11,6 +11,17 @@ interface ModelInfo {
   name?: string;
 }
 
+interface ProductsModel {
+  nome: String;
+  descricao: String;
+  categoria: String;
+  imagem: String;
+  preco: String;
+  material: String;
+  departamento: String;
+  id: String;
+}
+
 export const getInfoUser = async (id: number) => {
   const infoUser = await prisma.user.findUnique({
     where: {
@@ -76,4 +87,20 @@ export const newInfoUserUpdate = async (newInfoUser: ModelInfo) => {
   });
 
   return infoUser;
+};
+
+export const sendProducts = async (
+  products: any,
+  userId: number | undefined
+) => {
+  const saveProduct = await prisma.user.update({
+    where: {
+      id: Number(userId),
+    },
+    data: {
+      shopping: products,
+    },
+  });
+
+  return saveProduct;
 };

@@ -6,6 +6,7 @@ import {
   getLoginInfo,
   newInfoUserUpdate,
   getShopping,
+  sendProducts,
 } from "../../repositories";
 
 dotenv.config();
@@ -68,14 +69,15 @@ class UserRoutes {
       const foundProducts: ProductsModel[] = [];
       const data = await this.allProducts();
 
-      const idItems: any = req.query.idItems;
-      console.log("findproducts: ", idItems);
+      const idItems: any = ["1", "2"];
+      console.log("iditen: ", typeof idItems[0]);
 
       for (let i = 0; i < idItems.length; i++) {
-        if (idItems[i] !== data[i].id) {
+        if (idItems[i] == data[i].id) {
           foundProducts.push(data[idItems[i] - 1]);
         }
       }
+      console.log("findproducts: ", foundProducts);
 
       return res.json(foundProducts);
     });
@@ -83,7 +85,12 @@ class UserRoutes {
 
   sendProducts() {
     this.router.post("/sendproducts", async (req: Request, res: Response) => {
-      console.log("api-sendproducts: ", req.query);
+      const data = req.query.values as any;
+      const userId = req.query.user as undefined | number;
+      const sendDBProducts = await sendProducts(data, userId);
+      if (sendDBProducts) {
+        res.send(true);
+      }
     });
   }
 
@@ -103,10 +110,8 @@ class UserRoutes {
   getshopping() {
     this.router.get("/getshopping", async (req: Request, res: Response) => {
       const idNumber = Number(req.query.id);
-      console.log("getshopping: ", idNumber);
 
       const shoppingUser = await getShopping(idNumber);
-      console.log("getshoppingret: ", shoppingUser?.shopping);
 
       res.send(shoppingUser?.shopping);
     });
@@ -126,7 +131,6 @@ class UserRoutes {
   updateUser() {
     this.router.post("/updateuser", async (req: Request, res: Response) => {
       const newInfoUser = req.query as any;
-      console.log("updateuser :", newInfoUser);
 
       const infoUser = await newInfoUserUpdate(newInfoUser);
 

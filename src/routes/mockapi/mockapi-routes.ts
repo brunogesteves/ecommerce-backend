@@ -86,8 +86,7 @@ class MockApiRoutes {
         const slides: ProductsModel = {
           nome: valueOf.nome,
           preco: valueOf.preco,
-          image:
-            "https://static.vecteezy.com/ti/vetor-gratis/p3/226407-tshirt-vector-camisa-preta-gratis-vetor.jpg",
+          imagem: valueOf.imagem,
         };
         data.push(slides);
       });
@@ -97,8 +96,7 @@ class MockApiRoutes {
         const slides = {
           nome: data[n].nome,
           preco: data[n].preco,
-          image:
-            "https://static.vecteezy.com/ti/vetor-gratis/p3/226407-tshirt-vector-camisa-preta-gratis-vetor.jpg",
+          imagem: data[n].imagem,
         };
         fiveSlides.push(slides);
       }
@@ -111,7 +109,7 @@ class MockApiRoutes {
     this.router.get("/frontproducts", async (req: Request, res: Response) => {
       const data = await this.allProducts();
 
-      const fiveProducts = [];
+      const tenProducts = [];
 
       for (let index = 0; index < 8; index++) {
         const n = Math.floor(Math.random() * data.length - 1);
@@ -123,13 +121,12 @@ class MockApiRoutes {
           material: data[n].material,
           descricao: data[n].descricao,
           departamento: data[n].departamento,
-          image:
-            "https://static.vecteezy.com/ti/vetor-gratis/p3/226407-tshirt-vector-camisa-preta-gratis-vetor.jpg",
+          imagem: data[n].imagem,
         } as ProductsModel;
-        fiveProducts.push(products);
+        tenProducts.push(products);
       }
 
-      return res.send(fiveProducts);
+      return res.send(tenProducts);
     });
   }
 
@@ -163,7 +160,7 @@ class MockApiRoutes {
 
       data.forEach((data) => {
         if (typeof searchTerm == "string") {
-          if (data.nome?.includes(searchTerm)) foundProducts.push(data);
+          if (data.nome?.includes("Fantastic")) foundProducts.push(data);
         }
       });
 
