@@ -70,14 +70,12 @@ class UserRoutes {
       const data = await this.allProducts();
 
       const idItems: any = ["1", "2"];
-      console.log("iditen: ", typeof idItems[0]);
 
       for (let i = 0; i < idItems.length; i++) {
         if (idItems[i] == data[i].id) {
           foundProducts.push(data[idItems[i] - 1]);
         }
       }
-      console.log("findproducts: ", foundProducts);
 
       return res.json(foundProducts);
     });
