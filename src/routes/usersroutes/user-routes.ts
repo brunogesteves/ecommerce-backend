@@ -69,7 +69,7 @@ class UserRoutes {
       const foundProducts: ProductsModel[] = [];
       const data = await this.allProducts();
 
-      const idItems: any = ["1", "2"];
+      const idItems: any = req.query.idItems;
 
       for (let i = 0; i < idItems.length; i++) {
         if (idItems[i] == data[i].id) {
